@@ -1,12 +1,17 @@
-#Projeto Videoteca Flask
-from flask import Flask
+from flask import Flask, render_template
 
 
 app = Flask(__name__)
 
 @app.route('/inicio')
 def ola():
-    return '<h1>Olá Mundo!</h1>' #Como se trata de um framework web, precisamos colocar dentro de formatos htmls por iso o <h1></h1>
+    '''
+    Não foi precio adicionar um caminho para o return abaixo, apenas definir o nome do arquivo .html, devido
+    ao Pytho já identificar que a estrutura .html fica em nome_projeto\templates, caso o nome do diretório
+    não fosse template, ai então teriamos que definir um caminho!
+    :return:
+    '''
+    return render_template('lista.html')
 
 app.run()
 
