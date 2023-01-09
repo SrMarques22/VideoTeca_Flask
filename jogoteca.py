@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 
-
+# Para inicializar, pela primeira vez, uma aplicação feita em Flask, deve ser utilizado através do código abaixo: app = Flask(__name__)
 app = Flask(__name__)
 
 @app.route('/inicio')
@@ -11,7 +11,7 @@ def ola():
     não fosse template, ai então teriamos que definir um caminho!
     :return:
     '''
-    return render_template('lista.html')
+    return render_template('lista.html',titulo='GameStation') #dentro da variável titulo, realizamos a insersão do valor atribuido no arquivo lista.html
 
 app.run()
 
