@@ -1,5 +1,11 @@
 from flask import Flask, render_template
 
+class Jogo:
+    def __init__(self,nome, categoria, console):
+        self.name=nome
+        self.cat=categoria
+        self.consol=console
+
 # Para inicializar, pela primeira vez, uma aplicação feita em Flask, deve ser utilizado através do código abaixo: app = Flask(__name__)
 app = Flask(__name__)
 
@@ -11,7 +17,11 @@ def ola():
     não fosse template, ai então teriamos que definir um caminho!
     :return:
     '''
-    return render_template('lista.html',titulo='GameStation') #dentro da variável titulo, realizamos a insersão do valor atribuido no arquivo lista.html
+    jogo1 = Jogo('Donkey Kong','Adventure','Super Nintendo')
+    jogo2 = Jogo('Shadow of the Colossus','Puzzle','Play Station')
+    jogo3 = Jogo('Wild Rift','MOBA','Smartphone')
+    lista = [jogo1,jogo2,jogo3]
+    return render_template('lista.html',titulo='GameStation', jogos = lista) #dentro da variável titulo, realizamos a insersão do valor atribuido no arquivo lista.html
 
 app.run()
 
