@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 
 class Jogo:
     def __init__(self,nome, categoria, console):
@@ -41,12 +41,13 @@ def criar():
     console = request.form['console']
     jogo = Jogo(nome, categoria, console)
     lista.append(jogo)
-    return render_template('lista.html', titulo='Jogos', jogos=lista)
+    #Colocamos o redirect para voltar a pagina inicial sempre que for utilizada a função criar, o / é a nossa página principal
+    return redirect('/')
 
 
 #Para executar o debugger e facilitar os ajustes sem ter que dar stop e start na aplicação:
-#app.run(debug=True)
-app.run()
+app.run(debug=True)
+#app.run()
 
 
 #O route serve para criarmos a rota após o link de acesso, após a criarmos os passos acima, basta dar um RUN
