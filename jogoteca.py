@@ -50,6 +50,19 @@ def criar():
     return redirect('/')
 
 
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/autenticar', methods=['POST',])
+def autenticar():
+    if 'admin' == request.form['senha']: #O request pega as informações do formulario
+        return redirect('/')
+    else:
+        return redirect('/login')
+
+
 #Para executar o debugger e facilitar os ajustes sem ter que dar stop e start na aplicação:
 app.run(debug=True)
 #app.run()
