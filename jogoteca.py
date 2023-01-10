@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, flash
+from flask import Flask, render_template, request, redirect, session, flash, url_for
 #Vamos instalar o BootStrap para aglizar e facilitar  os layouts CSS da nossa aplicação, através do link abaixo
 # mas sempre se deve verificar a versão antes:
 # https://getbootstrap.com/docs/5.1/getting-started/download/
@@ -22,6 +22,25 @@ jogo2 = Jogo('Shadow of the Colossus','Puzzle','Play Station')
 jogo3 = Jogo('Wild Rift','MOBA','Smartphone')
 lista = [jogo1,jogo2,jogo3]
 
+
+
+class Usuario:
+    def __init__(self,nome, nickname,senha):
+        self.nome = nome
+        self.nickname = nickname
+        self.senha = senha
+
+usuario1 = Usuario("Bruno Ismael Marques","BIM", "T123")
+usuario2 = Usuario("Ana Marques","Anina", "Bteamo")
+usuario3 = Usuario("Rafael Marques","Mee", "123")
+
+usuarios = {usuario1.nickname : usuario1,
+            usuario2.nickname : usuario2,
+            usuario3.nickname : usuario3}
+
+
+
+
 # Para inicializar, pela primeira vez, uma aplicação feita em Flask, deve ser utilizado através do código abaixo: app = Flask(__name__)
 app = Flask(__name__)
 #é necessário colocar essa chave abaixo, com o valor que preferir para que o navegador aceite os cookies, é uma camada de segurança
@@ -33,7 +52,7 @@ app.secret_key='alura'
 def novo():
     if 'usuario_logado' not in session or session['usuario_logado'] == None:
         #o ?proxima=novo serve para me redirecionar para a pagina certa após tentar acessa-la e não tiver sucesso pois não estou logado
-        return redirect('/login?proxima=novo')
+        return redirect(url_for('login', proxima=url_for('novo')))
 
     return render_template('novo.html', titulo='Novo Jogo')
 
@@ -57,8 +76,7 @@ def criar():
     console = request.form['console']
     jogo = Jogo(nome, categoria, console)
     lista.append(jogo)
-    #Colocamos o redirect para voltar a pagina inicial sempre que for utilizada a função criar, o / é a nossa página principal
-    return redirect('/')
+    return redirect(url_for('index'))
 
 
 
@@ -71,19 +89,20 @@ def login():
 def logout():
     session['usuario_logado']=None
     flash('Logout efetuado com sucesso!')
-    return redirect('/')
+    return redirect(url_for('index'))
 
 @app.route('/autenticar', methods=['POST',])
 def autenticar():
-    if 'admin' == request.form['senha']: #O request pega as informações do formulario
-        session['usuario_logado'] = request.form['usuario']
-        #flash é o responsável pelos avisos
-        flash(session['usuario_logado']+" logado com sucesso!")
-        proxima_pagina = request.form['proxima']
-        return redirect(f'/{proxima_pagina}')
+    if request.form['usuario'] in usuarios:
+        usuario = usuarios[request.form['usuario']]
+        if request.form['senha'] == usuario.senha:
+            session['usuario_logado']= usuario.nickname
+            flash(usuario.nickname + " logado com sucesso!")
+            proxima_pagina = request.form['proxima']
+            return redirect(proxima_pagina)
     else:
         flash('Usuário não logado.')
-        return redirect('/login')
+        return redirect(url_for('login'))
 
 
 #Para executar o debugger e facilitar os ajustes sem ter que dar stop e start na aplicação:
