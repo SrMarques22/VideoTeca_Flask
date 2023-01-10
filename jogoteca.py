@@ -1,9 +1,14 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session, flash
 #Vamos instalar o BootStrap para aglizar e facilitar  os layouts CSS da nossa aplicação, através do link abaixo
 # mas sempre se deve verificar a versão antes:
 # https://getbootstrap.com/docs/5.1/getting-started/download/
 # após baixado, abrir a pasta CSS e pegar apenas o arquivo botstrap.css copiar e criar a pasta static dento do projeto e colar dentro
 # depois referenciamos ele nos arquivos .html no <head> com a linha <link rel="stylesheet" href="../static/bootstrap.css">,
+
+
+#Session é um recurso do Flask que permite um armazenamento temporário de dados que persiste as
+# informações coletadas por mais de um ciclo de request.Isso é feito através do armazenamento
+# dos dados no Client-side (Lado do cliente) da aplicação, ou seja, no navegador, através dos cookies
 
 class Jogo:
     def __init__(self,nome, categoria, console):
@@ -19,6 +24,8 @@ lista = [jogo1,jogo2,jogo3]
 
 # Para inicializar, pela primeira vez, uma aplicação feita em Flask, deve ser utilizado através do código abaixo: app = Flask(__name__)
 app = Flask(__name__)
+#é necessário colocar essa chave abaixo, com o valor que preferir para que o navegador aceite os cookies, é uma camada de segurança
+app.secret_key='alura'
 
 
 #OBS: O APP.ROUTE deve ficar antes do seu respectivo def!
@@ -58,8 +65,13 @@ def login():
 @app.route('/autenticar', methods=['POST',])
 def autenticar():
     if 'admin' == request.form['senha']: #O request pega as informações do formulario
+        session['usuario_logado'] = request.form['usuario']
+        #flash é o responsável pelos avisos
+        flash(session['usuario_logado']+" logado com sucesso!")
+
         return redirect('/')
     else:
+        flash('Usuário não logado.')
         return redirect('/login')
 
 
