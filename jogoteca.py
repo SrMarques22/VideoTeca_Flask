@@ -31,7 +31,11 @@ app.secret_key='alura'
 #OBS: O APP.ROUTE deve ficar antes do seu respectivo def!
 @app.route('/novo')
 def novo():
-    return  render_template('novo.html', titulo='Novo Game')
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        #o ?proxima=novo serve para me redirecionar para a pagina certa após tentar acessa-la e não tiver sucesso pois não estou logado
+        return redirect('/login?proxima=novo')
+
+    return render_template('novo.html', titulo='Novo Jogo')
 
 @app.route('/')
 def index():
@@ -60,7 +64,14 @@ def criar():
 
 @app.route('/login')
 def login():
-    return render_template('login.html')
+    proxima = request.args.get('proxima')
+    return render_template('login.html', proxima=proxima)
+
+@app.route('/logout')
+def logout():
+    session['usuario_logado']=None
+    flash('Logout efetuado com sucesso!')
+    return redirect('/')
 
 @app.route('/autenticar', methods=['POST',])
 def autenticar():
@@ -68,8 +79,8 @@ def autenticar():
         session['usuario_logado'] = request.form['usuario']
         #flash é o responsável pelos avisos
         flash(session['usuario_logado']+" logado com sucesso!")
-
-        return redirect('/')
+        proxima_pagina = request.form['proxima']
+        return redirect(f'/{proxima_pagina}')
     else:
         flash('Usuário não logado.')
         return redirect('/login')
