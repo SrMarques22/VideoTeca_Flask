@@ -1,4 +1,9 @@
 from flask import Flask, render_template, request, redirect
+#Vamos instalar o BootStrap para aglizar e facilitar  os layouts CSS da nossa aplicação, através do link abaixo
+# mas sempre se deve verificar a versão antes:
+# https://getbootstrap.com/docs/5.1/getting-started/download/
+# após baixado, abrir a pasta CSS e pegar apenas o arquivo botstrap.css copiar e criar a pasta static dento do projeto e colar dentro
+# depois referenciamos ele nos arquivos .html no <head> com a linha <link rel="stylesheet" href="../static/bootstrap.css">,
 
 class Jogo:
     def __init__(self,nome, categoria, console):
